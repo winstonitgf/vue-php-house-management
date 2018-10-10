@@ -3,7 +3,7 @@
     <img src="../assets/logo.png">
     <h1>{{ msg }}</h1>
     <h2>Winston & Wade & Yang.</h2>
-    <md-button class="md-raised" :md-ripple="false" @click="goRoute('/Category')">Ripple Off</md-button>
+    <md-button class="md-raised" :md-ripple="false" @click="goRoute('/Category')">Start</md-button>
   </div>
 </template>
 
