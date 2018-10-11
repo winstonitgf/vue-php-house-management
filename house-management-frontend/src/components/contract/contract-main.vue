@@ -7,15 +7,15 @@
       </md-speed-dial-target>
 
       <md-speed-dial-content>
-        <md-button class="md-icon-button" @click="goRoute('/Category')">
+        <md-button class="md-icon-button" @click="GoRoute('/Category')">
           <md-icon>home</md-icon>
         </md-button>
 
-        <md-button class="md-icon-button" @click="goRoute('/HouseMain')">
+        <md-button class="md-icon-button" @click="GoRoute('/HouseMain')">
           <md-icon>domain</md-icon>
         </md-button>
 
-        <md-button class="md-icon-button" @click="goRoute('/UserMain')">
+        <md-button class="md-icon-button" @click="GoRoute('/UserMain')">
           <md-icon>person</md-icon>
         </md-button>
 
@@ -34,7 +34,7 @@ export default {
     };
   },
   methods: {
-    goRoute(route) {
+    GoRoute(route) {
       this.$router.push(route);
     }
   }
