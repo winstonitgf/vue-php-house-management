@@ -12,7 +12,6 @@
     </md-field>
 </div>
 
-
     <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
         <md-ripple>
             <md-card-header>
