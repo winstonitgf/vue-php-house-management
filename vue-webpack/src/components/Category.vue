@@ -13,7 +13,9 @@
             </md-card-content>
 
             <md-card-actions>
-                <md-button @click="GoRoute(item.flex3)">Entry</md-button>
+                <md-button @click="GoRoute(item.flex3)">
+                    <md-icon>forward</md-icon>
+                </md-button>
             </md-card-actions>
         </md-ripple>
     </md-card>

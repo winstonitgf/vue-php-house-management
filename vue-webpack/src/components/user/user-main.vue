@@ -13,19 +13,30 @@
     </div>
 
     <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
-        <md-ripple>
-            <md-card-header>
-                <div class="md-title">{{item.name}}</div>
-            </md-card-header>
+        <div v-if="item.isProgress">
+            <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+        </div>
+        <div v-if="!item.isProgress">
+            <md-ripple>
+                <md-card-header>
+                    <div class="md-title">{{item.name}}</div>
+                </md-card-header>
 
-            <md-card-content>
-                {{item.user_id}}
-            </md-card-content>
+                <md-card-content>
+                    {{item.user_id}}
+                </md-card-content>
 
-            <md-card-actions>
-                <md-button>Entry</md-button>
-            </md-card-actions>
-        </md-ripple>
+                <md-card-actions>
+                    <md-button class="md-primary md-icon-button" @click="Update(item)">
+                        <md-icon>edit</md-icon>
+                    </md-button>
+                    <md-button class="md-accent md-icon-button">
+                        <md-icon>cancel</md-icon>
+                    </md-button>
+                </md-card-actions>
+            </md-ripple>
+        </div>
+
     </md-card>
 
     <md-speed-dial class="md-bottom-right">
@@ -58,20 +69,27 @@
 
 <script lang="ts">
 import axios from "axios";
-import USER from "../../models/user";
+import USER_VW from "../../models/user-vw";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class UserMain extends Vue {
-  users: USER = new USER();
-  critiria: USER = new USER();
+  users: USER_VW = new USER_VW();
+  critiria: USER_VW = new USER_VW();
+
+  Update(viewmodel: USER_VW) {
+    viewmodel.isProgress = true;
+    axios
+      .put(process.env.API_ROOT + `api/users/${viewmodel.id}`, viewmodel)
+      .then(response => (viewmodel.isProgress = false));
+  }
   mounted() {
     this.FetchUsers(this.critiria);
   }
   GoRoute(route) {
     this.$router.push(route);
   }
-  FetchUsers(filters: USER) {
+  FetchUsers(filters: USER_VW) {
     axios
       .get(process.env.API_ROOT + "api/users", {
         headers: {
