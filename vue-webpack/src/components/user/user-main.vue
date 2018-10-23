@@ -68,9 +68,10 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+// import axios from "axios";
 import USER_VW from "../../models/user-vw";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { UserServer } from "../../providers/http-server-user";
 
 @Component({})
 export default class UserMain extends Vue {
@@ -78,10 +79,10 @@ export default class UserMain extends Vue {
   critiria: USER_VW = new USER_VW();
 
   Update(viewmodel: USER_VW) {
-    viewmodel.isProgress = true;
-    axios
-      .put(process.env.API_ROOT + `api/users/${viewmodel.id}`, viewmodel)
-      .then(response => (viewmodel.isProgress = false));
+    // viewmodel.isProgress = true;
+    // axios
+    //   .put(process.env.API_ROOT + `api/users/${viewmodel.id}`, viewmodel)
+    //   .then(response => (viewmodel.isProgress = false));
   }
   mounted() {
     this.FetchUsers(this.critiria);
@@ -90,15 +91,18 @@ export default class UserMain extends Vue {
     this.$router.push(route);
   }
   FetchUsers(filters: USER_VW) {
-    axios
-      .get(process.env.API_ROOT + "api/users", {
-        headers: {
-          "Access-Control-Allow-Origin": process.env.API_ROOT,
-          "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
-          "Access-Control-Max-Age": "86400"
-        }
-      })
-      .then(response => (this.users = response.data));
+    UserServer.fetch(filters).then(
+      (response: USER_VW) => (this.users = response)
+    );
+    // axios
+    //   .get(process.env.API_ROOT + "api/users", {
+    //     headers: {
+    //       "Access-Control-Allow-Origin": process.env.API_ROOT,
+    //       "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
+    //       "Access-Control-Max-Age": "86400"
+    //     }
+    //   })
+    //   .then(response => (this.users = response.data));
   }
 }
 </script>
