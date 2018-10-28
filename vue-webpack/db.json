@@ -1,9 +1,10 @@
 {
-  "users": [{
-      "id": 1,
+  "users": [
+    {
       "name": "winston",
       "user_id": "R123456789",
-      "gender": "male"
+      "gender": "male",
+      "id": 1
     },
     {
       "id": 2,
@@ -18,7 +19,8 @@
       "gender": "female"
     }
   ],
-  "configs": [{
+  "configs": [
+    {
       "id": 1,
       "type": "CATEGORY",
       "code": null,

@@ -11,33 +11,31 @@
             <md-input v-model="critiria.user_id" maxlength="10"></md-input>
         </md-field>
     </div>
+    <div>
+        <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
+            <div>
+                <md-ripple>
+                    <md-card-header>
+                        <div class="md-title">{{item.name}}</div>
+                    </md-card-header>
 
-    <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
-        <div v-if="item.isProgress">
-            <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
-        </div>
-        <div v-if="!item.isProgress">
-            <md-ripple>
-                <md-card-header>
-                    <div class="md-title">{{item.name}}</div>
-                </md-card-header>
+                    <md-card-content>
+                        {{item.user_id}}
+                    </md-card-content>
 
-                <md-card-content>
-                    {{item.user_id}}
-                </md-card-content>
+                    <md-card-actions>
+                        <md-button class="md-primary md-icon-button" @click="Update(item)">
+                            <md-icon>edit</md-icon>
+                        </md-button>
+                        <md-button class="md-accent md-icon-button">
+                            <md-icon>cancel</md-icon>
+                        </md-button>
+                    </md-card-actions>
+                </md-ripple>
+            </div>
 
-                <md-card-actions>
-                    <md-button class="md-primary md-icon-button" @click="Update(item)">
-                        <md-icon>edit</md-icon>
-                    </md-button>
-                    <md-button class="md-accent md-icon-button">
-                        <md-icon>cancel</md-icon>
-                    </md-button>
-                </md-card-actions>
-            </md-ripple>
-        </div>
-
-    </md-card>
+        </md-card>
+    </div>
 
     <md-speed-dial class="md-bottom-right">
         <md-speed-dial-target style="background-color:red">
@@ -70,19 +68,21 @@
 <script lang="ts">
 // import axios from "axios";
 import USER_VW from "../../models/user-vw";
+import store from "../../store";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { UserServer } from "../../providers/http-server-user";
 
 @Component({})
 export default class UserMain extends Vue {
-  users: USER_VW = new USER_VW();
+  users: Array<USER_VW> = new Array<USER_VW>();
   critiria: USER_VW = new USER_VW();
 
   Update(viewmodel: USER_VW) {
-    // viewmodel.isProgress = true;
-    // axios
-    //   .put(process.env.API_ROOT + `api/users/${viewmodel.id}`, viewmodel)
-    //   .then(response => (viewmodel.isProgress = false));
+    store.commit("changeProgressState");
+    console.log(viewmodel);
+    UserServer.put(viewmodel.id, viewmodel).then((response: USER_VW) => {
+      store.commit("changeProgressState");
+    });
   }
   mounted() {
     this.FetchUsers(this.critiria);
@@ -90,19 +90,15 @@ export default class UserMain extends Vue {
   GoRoute(route) {
     this.$router.push(route);
   }
+  isProgress() {
+    return store.state.isProgress;
+  }
   FetchUsers(filters: USER_VW) {
-    UserServer.fetch(filters).then(
-      (response: USER_VW) => (this.users = response)
-    );
-    // axios
-    //   .get(process.env.API_ROOT + "api/users", {
-    //     headers: {
-    //       "Access-Control-Allow-Origin": process.env.API_ROOT,
-    //       "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
-    //       "Access-Control-Max-Age": "86400"
-    //     }
-    //   })
-    //   .then(response => (this.users = response.data));
+    store.commit("changeProgressState");
+    UserServer.fetch(filters).then((response: Array<USER_VW>) => {
+      store.commit("changeProgressState");
+      this.users = response;
+    });
   }
 }
 </script>

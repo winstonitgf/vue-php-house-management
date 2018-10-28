@@ -8,6 +8,7 @@ axios.interceptors.request.use(
   config => {
     config.data = JSON.stringify(config.data);
     config.headers = {
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": process.env.API_ROOT,
       "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
       "Access-Control-Max-Age": "86400"
@@ -87,8 +88,10 @@ export function remove(url, data = {}) {
   });
 }
 
-export function put(url, data = {}) {
+export function put(url, data) {
   return new Promise((resolve, reject) => {
+    delete (<any>data).id;
+    delete (<any>data).isProgress;
     axios.put(url, data).then(
       response => {
         resolve(response.data);
@@ -107,8 +110,9 @@ export const UserServer = {
   post: function(paramObj) {
     return post("api/users", paramObj);
   },
-  put: function(paramObj) {
-    return put("api/users", paramObj);
+  put: function(id, paramObj) {
+    console.log("Put", paramObj);
+    return put(`api/users/${id}`, paramObj);
   },
   delete: function(paramObj) {
     return remove("api/users", paramObj);

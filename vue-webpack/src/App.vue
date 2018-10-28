@@ -1,17 +1,19 @@
 <template>
 <div id="app">
+  <md-progress-bar class="md-accent" md-mode="indeterminate" v-if="isProgress()"></md-progress-bar>
     <router-view />
 </div>
 </template>
-<script>
+<script lang="ts">
 import Vue from "vue";
-import VueMaterial from "vue-material";
-import "vue-material/dist/vue-material.min.css";
-import "vue-material/dist/theme/default.css";
-Vue.use(VueMaterial);
-export default {
-  name: "App"
-};
+import Component from "vue-class-component";
+import store from "./store";
+@Component({})
+export default class App extends Vue {
+  isProgress() {
+    return store.state.isProgress;
+  }
+}
 </script>
 <style>
 #app {
