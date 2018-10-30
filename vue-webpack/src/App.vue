@@ -7,6 +7,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+
 import store from "./store";
 @Component({})
 export default class App extends Vue {
@@ -22,5 +23,8 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#app > .md-progress-bar {
+  height: 2px;
 }
 </style>
