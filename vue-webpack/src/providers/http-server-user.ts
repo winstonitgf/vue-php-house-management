@@ -90,8 +90,6 @@ export function remove(url, data = {}) {
 
 export function put(url, data) {
   return new Promise((resolve, reject) => {
-    delete (<any>data).id;
-    delete (<any>data).isProgress;
     axios.put(url, data).then(
       response => {
         resolve(response.data);

@@ -11,29 +11,48 @@
             <md-input v-model="critiria.user_id" maxlength="10"></md-input>
         </md-field>
     </div>
-    <div >
-        <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
-            <div>
-                <md-ripple>
-                    <md-card-header>
-                        <div class="md-title">{{item.name}}</div>
-                    </md-card-header>
+    <div>
+        <transition-group name="list">
+            <md-card md-with-hover v-for="(item, index) in users" v-bind:index="index" v-bind:key="item.id">
+                <div>
+                    <md-ripple>
+                        <md-card-header>
+                            <div class="md-title">{{item.name}}</div>
+                        </md-card-header>
 
-                    <md-card-content>
-                        {{item.user_id}}
-                    </md-card-content>
+                        <md-card-content>
+                            <div v-if="!item.editable">
+                                <div>{{item.address}}</div>
+                                <div>{{item.user_id}}</div>
+                            </div>
 
-                    <md-card-actions v-if="!isProgress()">
-                        <md-button class="md-primary md-icon-button" @click="Update(item)">
-                            <md-icon>edit</md-icon>
-                        </md-button>
-                        <md-button class="md-accent md-icon-button">
-                            <md-icon>cancel</md-icon>
-                        </md-button>
-                    </md-card-actions>
-                </md-ripple>
-            </div>
-        </md-card>
+                            <div v-else>
+                                <md-field>
+                                    <label>User ID</label>
+                                    <md-input v-model="item.user_id" maxlength="10"></md-input>
+                                </md-field>
+                                <md-field>
+                                    <label>Address</label>
+                                    <md-input v-model="item.address"></md-input>
+                                </md-field>
+                            </div>
+                        </md-card-content>
+
+                        <md-card-actions v-show="!isProgress()">
+                            <md-button class="md-primary md-icon-button" v-if="!item.editable" @click="EnableUpdate(item)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-primary md-icon-button" v-if="item.editable" @click="Update(item)">
+                                <md-icon>done</md-icon>
+                            </md-button>
+                            <md-button class="md-accent md-icon-button" v-if="item.editable" @click="EnableUpdate(item)">
+                                <md-icon>cancel</md-icon>
+                            </md-button>
+                        </md-card-actions>
+                    </md-ripple>
+                </div>
+            </md-card>
+        </transition-group>
     </div>
 
     <MenuButton></MenuButton>
@@ -56,16 +75,17 @@ import { UserServer } from "../../providers/http-server-user";
 export default class UserMain extends Vue {
   users: Array<USER_VW> = new Array<USER_VW>();
   critiria: USER_VW = new USER_VW();
-  show: boolean = true;
+  EnableUpdate(viewmodel: USER_VW) {
+    viewmodel.editable = !viewmodel.editable;
+  }
   Update(viewmodel: USER_VW) {
     store.commit("changeProgressState");
-    console.log(viewmodel);
-    viewmodel.name = "test";
     UserServer.put(viewmodel.id, viewmodel).then((response: USER_VW) => {
-      viewmodel = response;
+      viewmodel.editable = false;
       store.commit("changeProgressState");
     });
   }
+
   mounted() {
     this.FetchUsers(this.critiria);
   }
@@ -76,6 +96,9 @@ export default class UserMain extends Vue {
     store.commit("changeProgressState");
     UserServer.fetch(filters).then((response: Array<USER_VW>) => {
       store.commit("changeProgressState");
+      response.forEach(function(x) {
+        x.editable = false;
+      });
       this.users = response;
     });
   }
@@ -95,7 +118,14 @@ export default class UserMain extends Vue {
   vertical-align: top;
 }
 
-.custom-appear-class {
-  color: red;
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
 }
 </style>

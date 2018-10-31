@@ -1,26 +1,29 @@
 {
-  "users": [
-    {
-      "name": "test",
-      "user_id": "R123456789",
+  "users": [{
+      "name": "winston",
+      "user_id": "R123456224",
       "gender": "male",
+      "address": "abc, aaa, ccc",
+      "editable": true,
       "id": 1
     },
     {
-      "name": "test",
-      "user_id": "R111111111",
+      "name": "yang",
+      "user_id": "R111111355",
       "gender": "male",
-      "id": 2
+      "address": "abc, aaa, ccc",
+      "id": 2,
+      "editable": true
     },
     {
       "id": 3,
       "name": "wade",
+      "address": "abc, aaa, ccc",
       "user_id": "R000000000",
       "gender": "female"
     }
   ],
-  "configs": [
-    {
+  "configs": [{
       "id": 1,
       "type": "CATEGORY",
       "code": null,
